@@ -12,7 +12,7 @@
 <body>
 <table width="100%">
 <tr><td>
-<p id="newtransliteration">
+<p id="content">
         <h1>Homer: The Odyssey</h1>
         <p>
           <strong>Tell me, O muse,</strong> of that ingenious hero who travelled far and wide after he had sacked
@@ -60,7 +60,7 @@ var myAnnotation = {
         }
       };
 var r = Recogito.init({
-    content: document.getElementById('newtransliteration'), // ID or DOM element
+    content: 'content', // ID or DOM element
     formatter: function(annotation) {
       if(annotation.bodies.length == 1){
         console.log(annotation)
