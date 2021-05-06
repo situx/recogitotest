@@ -1,0 +1,137 @@
+<html>
+<head>
+<script src="js/recogito.js"></script>
+<link rel="stylesheet" href="css/recogito.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@recogito/annotorious-openseadragon@2.3.1/dist/annotorious.min.css"></link>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/openseadragon/2.4.2/openseadragon.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@recogito/annotorious-openseadragon@2.3.1/dist/openseadragon-annotorious.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@recogito/annotorious-toolbar@latest/dist/annotorious-toolbar.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@recogito/annotorious-tilted-box@latest/dist/annotorious-tilted-box.min.js"></script>
+</head>
+<body>
+<table width="100%">
+<tr><td>
+<p id="newtransliteration" contenteditable="false" style="border:2px; border-style:solid; border-color:#000000; padding: 1em;">
+        <h1>Homer: The Odyssey</h1>
+        <p>
+          <strong>Tell me, O muse,</strong> of that ingenious hero who travelled far and wide after he had sacked
+          the famous town of Troy. Many cities did he visit, and many were the nations with whose manners and customs
+          he was acquainted; moreover he suffered much by sea while trying to save his own life and bring his men safely
+          home; but do what he might he could not save his men, for they perished through their own sheer folly in eating
+          the cattle of the Sun-god Hyperion; so the god prevented them from ever reaching home. Tell me, too, about all
+          these things, O daughter of Jove, from whatsoever source you may know them.
+        </p>
+        <p>
+          <strong>So now all who escaped death in battle</strong> or by shipwreck had got safely home except Ulysses,
+          and he, though he was longing to return to his wife and country, was detained by the goddess Calypso, who
+          had got him into a large cave and wanted to marry him. But as years went by, there came a time when the gods
+          settled that he should go back to Ithaca; even then, however, when he was among his own people, his troubles
+          were not yet over; nevertheless all the gods had now begun to pity him except Neptune, who still persecuted
+          him without ceasing and would not let him get home.
+        </p>
+
+</p>
+</td><td>
+<div>
+    <div id="my-toolbar-container"></div>
+    <div id="showingimage" style="width: 640px; height: 480px;"></div>
+<a id="metadata" onClick="getEXIFData('showingimage','metadatafield')">
+<svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-info-circle-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412l-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM8 5.5a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"></path></svg>
+</a>
+<button id="leftimage">&lt;</button><button id="rightimage">&gt;</button>
+<button id="saveAnnotation" onClick="commitAnnotation()">Save current annotation</button><br/>
+</div>
+</td></tr>
+</table>
+<script>
+var myAnnotation = {
+        '@context': 'http://www.w3.org/ns/anno.jsonld',
+        'id': 'https://www.example.com/recogito-js-example/foo',
+        'type': 'Annotation',
+        'body': [{
+          'type': 'TextualBody',
+          'value': 'This annotation was added via JS.'
+        }],
+        'target': {
+          'selector': [{
+            'type': 'TextQuoteSelector',
+            'exact': 'that ingenious hero'
+          }, {
+            'type': 'TextPositionSelector',
+            'start': 38,
+            'end': 57
+          }]
+        }
+      };
+var r = Recogito.init({
+    content: document.getElementById('newtransliteration'), // ID or DOM element
+    formatter: function(annotation) {
+      if(annotation.bodies.length == 1){
+        console.log(annotation)
+        if("body" in annotation && "value" in annotation["body"][0]){
+          return annotation["body"][0]["value"]
+        }
+      } 
+      return "";
+    },
+    widgets: [
+    'COMMENT',
+    { widget: 'TAG', vocabulary: [] }
+  ]
+});
+
+ r.loadAnnotations('annotations.w3c.json').then(function(annotations) {
+     for(anno in annotations){
+       console.log(anno)
+       curtextanno[annotations[anno]["id"]]=annotations[anno]
+       console.log(annotations[anno]["id"])
+     }
+    $(".r6o-annotation").attr("draggable", "True");
+    $('.r6o-annotation').on('dragstart', function (event) {
+         console.log("DRAGSTART")
+         console.log(event.target)
+         event.dataTransfer.setData("anno-id", event.target.getAttribute("data-id"));
+      });
+  });
+
+r.on('createAnnotation', async (annotation, overrideId) => {
+  $(".r6o-annotation").attr("draggable", "True");
+});
+
+ var viewer = OpenSeadragon({
+      id: "showingimage",
+      
+      tileSources: {
+        type: "image",
+        url:  "https://recogito.github.io/images/640px-Hallstatt.jpg"
+      }
+    });
+
+    var annoconfig={widgets:[
+    'COMMENT',
+    { widget: 'TAG', vocabulary: [] }
+    ]}
+
+    // Initialize the Annotorious plugin
+    var anno = OpenSeadragon.Annotorious(viewer,annoconfig);
+    Annotorious.Toolbar(anno, document.getElementById('my-toolbar-container'));
+    Annotorious.TiltedBox(anno);
+	 anno.on('createAnnotation', function(a) {
+	  $(".a9s-annotation").on("dragover", function(event) {
+          event.preventDefault();
+          event.stopPropagation();
+          return false;
+      });
+      $(".a9s-annotation").on("drop", function(event) {
+          event.preventDefault();
+          event.stopPropagation();
+          console.log(event)
+          console.log(event.dataTransfer.types)
+          var data = event.dataTransfer.getData("data-id");
+          console.log(data)
+      });   
+     //ondrop="dropThis(event)" ondragover="allowDropThis(event)"
+    });
+</script>
+</body>
+</html>
