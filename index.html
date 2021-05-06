@@ -126,7 +126,14 @@ r.on('createAnnotation', async (annotation, overrideId) => {
           console.log(event.dataTransfer.types)
           var data = event.dataTransfer.getData("data-id");
           console.log(data)
-      });   
+      });  
+		$(".a9s-annotation").attr("draggable", "True");
+		$('.a9s-annotation').on('dragstart', function (event) {
+         console.log("DRAGSTART")
+         console.log(event.target)
+		 console.log(event.target.getAttribute("data-id"))
+         event.dataTransfer.setData("anno-id", event.target.getAttribute("data-id"));
+      });	  
      //ondrop="dropThis(event)" ondragover="allowDropThis(event)"
     });
 </script>
