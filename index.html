@@ -135,10 +135,11 @@ r.on('createAnnotation', async (annotation, overrideId) => {
           console.log(event)
           console.log(event.originalEvent.dataTransfer)
           var data = event.originalEvent.dataTransfer.getData("text");
-          var data2 = event.originalEvent.dataTransfer.getData("text");
+          var data2 = event.originalEvent.dataTransfer.getData("text2");
           console.log(data)
           console.log(data2)
 		  event.currentTarget.annotation.underlying.body.push({"purpose":"linking","type":"TextualBody","value":data})
+		  event.currentTarget.annotation.underlying.body.push({"purpose":"tagging","type":"TextualBody","value":data})
 		  event.currentTarget.annotation.underlying.body.push({"purpose":"tagging","type":"TextualBody","value":data2})
       });  
 		$(".a9s-annotation").attr("draggable", "True");
