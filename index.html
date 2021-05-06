@@ -81,11 +81,6 @@ var r = Recogito.init({
 });
 
  r.loadAnnotations('annotations.w3c.json').then(function(annotations) {
-     for(anno in annotations){
-       console.log(anno)
-       curtextanno[annotations[anno]["id"]]=annotations[anno]
-       console.log(annotations[anno]["id"])
-     }
     $(".r6o-annotation").attr("draggable", "True");
     $('.r6o-annotation').on('dragstart', function (event) {
          console.log("DRAGSTART")
