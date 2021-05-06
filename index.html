@@ -134,6 +134,7 @@ r.on('createAnnotation', async (annotation, overrideId) => {
           console.log(event.originalEvent.dataTransfer)
           var data = event.originalEvent.dataTransfer.getData("text");
           console.log(data)
+		  event.currentTaget.annotation.underlying.body.push({"purpose":"tagging","type":"TextualBody","value":data})
       });  
 		$(".a9s-annotation").attr("draggable", "True");
 		$('.a9s-annotation').on('dragstart', function (event) {
